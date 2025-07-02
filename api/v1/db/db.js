@@ -3,15 +3,16 @@ import { Pool } from 'pg';
 
 dotenv.config();
 
-const createPool = () => {
-  let pool;
+const createPool = async () => {
+  let pool = new Pool({ connectionString: process.env.DB_URI });
 
   try {
-    pool = new Pool({ connectionString: process.env.DB_URI });
-    console.log('Database connection pool created');
+    const sqlResult = await pool.query('SELECT 1;');
+
+    if (sqlResult && sqlResult.rows) console.log('Connected to database');
   } catch (error) {
-    console.error('Error creating database connection pool:', error.message);
-    process.exit(1);
+    pool = null;
+    console.error('Error connecting to database:', error);
   }
 
   return pool;
@@ -20,9 +21,9 @@ const createPool = () => {
 const closePool = async (pool) => {
   try {
     await pool.end();
-    console.log('Database connection pool closed');
+    console.log('Disconnected from database');
   } catch (error) {
-    console.error('Error closing database connection pool:', error.message);
+    console.error('Error disconnecting from database:', error);
   }
 };
 
