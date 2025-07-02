@@ -9,7 +9,7 @@ import {
 } from '@jest/globals';
 import request from 'supertest';
 import express from 'express';
-import createCrudRouter from '../../factories/createCrudRouter.js';
+import crudEndpoints from '../../endpoints/crudEndpoints.js';
 import { createPool, closePool } from '../../db/db.js';
 import handleDbError from '../../util/handleDbError.js';
 import { formatInsert, formatUpdate } from '../../util/queryHelper.js';
@@ -18,7 +18,7 @@ jest.mock('../../db/db.js');
 jest.mock('../../util/handleDbError.js');
 jest.mock('../../util/queryHelper.js');
 
-describe('createCrudRouter', () => {
+describe('crudEndpoints', () => {
   let app;
   let pool;
 
@@ -29,7 +29,7 @@ describe('createCrudRouter', () => {
 
     app = express();
     app.use(express.json());
-    app.use('/api/v1/users', createCrudRouter(pool, 'users'));
+    app.use('/api/v1/users', crudEndpoints(pool, 'users'));
 
     jest.spyOn(console, 'error').mockImplementation(() => {});
   });

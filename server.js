@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import { createPool, closePool } from './api/v1/db/db.js';
-import createCrudRouter from './api/v1/factories/createCrudRouter.js';
+import crudEndpoints from './api/v1/endpoints/crudEndpoints.js';
 
 dotenv.config();
 
@@ -20,8 +20,8 @@ const corsOptions = {
 
 app.use(express.json());
 app.use(cors(corsOptions));
-app.use('/api/v1/departments', createCrudRouter(pool, 'departments'));
-app.use('/api/v1/employees', createCrudRouter(pool, 'employees'));
+app.use('/api/v1/departments', crudEndpoints(pool, 'departments'));
+app.use('/api/v1/employees', crudEndpoints(pool, 'employees'));
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 

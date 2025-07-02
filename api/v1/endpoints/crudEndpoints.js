@@ -2,7 +2,7 @@ import express from 'express';
 import handleDbError from '../util/handleDbError.js';
 import { formatInsert, formatUpdate } from '../util/queryHelper.js';
 
-const createCrudRouter = (pool, tableName) => {
+const crudEndpoints = (pool, tableName) => {
   const router = express.Router();
 
   router.get('/', async (request, response) => {
@@ -88,4 +88,4 @@ const createCrudRouter = (pool, tableName) => {
   return router;
 };
 
-export default createCrudRouter;
+export default crudEndpoints;
