@@ -1,14 +1,13 @@
 import express from 'express';
-import dbConnection from '../db/dbConnection.js';
 import handleDbError from '../util/handleDbError.js';
 import { formatInsert, formatUpdate } from '../util/queryHelper.js';
 
-const createCrudRouter = (tableName) => {
+const createCrudRouter = (pool, tableName) => {
   const router = express.Router();
 
   router.get('/', async (request, response) => {
     try {
-      const sqlResult = await dbConnection.query(`SELECT * FROM ${tableName};`);
+      const sqlResult = await pool.query(`SELECT * FROM ${tableName};`);
 
       return response.status(200).json(sqlResult.rows);
     } catch (error) {
@@ -18,7 +17,7 @@ const createCrudRouter = (tableName) => {
 
   router.get('/:id', async (request, response) => {
     try {
-      const sqlResult = await dbConnection.query(
+      const sqlResult = await pool.query(
         `SELECT * FROM ${tableName} WHERE id = $1;`,
         [request.params.id],
       );
@@ -35,7 +34,7 @@ const createCrudRouter = (tableName) => {
     const [columnNames, queryParams, placeholders] = formatInsert(request.body);
 
     try {
-      const sqlResult = await dbConnection.query(
+      const sqlResult = await pool.query(
         `INSERT INTO ${tableName} (${columnNames.join(', ')})
         VALUES (${placeholders})
         RETURNING *;`,
@@ -55,7 +54,7 @@ const createCrudRouter = (tableName) => {
     );
 
     try {
-      const sqlResult = await dbConnection.query(
+      const sqlResult = await pool.query(
         `UPDATE ${tableName}
         SET ${setClause}
         WHERE id = $${queryParams.length}
@@ -73,7 +72,7 @@ const createCrudRouter = (tableName) => {
 
   router.delete('/:id', async (request, response) => {
     try {
-      const sqlResult = await dbConnection.query(
+      const sqlResult = await pool.query(
         `DELETE FROM ${tableName} WHERE id = $1;`,
         [request.params.id],
       );
