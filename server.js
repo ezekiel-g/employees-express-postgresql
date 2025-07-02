@@ -7,8 +7,8 @@ import createCrudRouter from './api/v1/factories/createCrudRouter.js';
 dotenv.config();
 
 const app = express();
-const { PORT } = process.env;
 const pool = createPool();
+const { PORT } = process.env;
 const corsOptions = {
   origin: process.env.FRONT_END_URL,
   methods: ['GET', 'POST', 'PATCH', 'DELETE'],
