@@ -15,15 +15,17 @@ const corsOptions = {
   credentials: true,
 };
 
-app.use(express.json());
-app.use(cors(corsOptions));
-app.use('/api/v1/departments', createCrudRouter(pool, 'departments'));
-app.use('/api/v1/employees', createCrudRouter(pool, 'employees'));
+if (pool) {
+  app.use(express.json());
+  app.use(cors(corsOptions));
+  app.use('/api/v1/departments', createCrudRouter(pool, 'departments'));
+  app.use('/api/v1/employees', createCrudRouter(pool, 'employees'));
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-process.on('SIGINT', async () => {
-  console.log('Shutting down server...');
-  await closePool(pool);
-  process.exit(0);
-});
+  process.on('SIGINT', async () => {
+    console.log('Shutting down server...');
+    await closePool(pool);
+    process.exit(0);
+  });
+}
