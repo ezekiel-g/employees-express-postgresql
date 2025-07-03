@@ -5,7 +5,7 @@ const handleDbError = (response, error, columnNames = []) => {
 
   for (let i = 0; i < columnNames.length; i++) {
     if (error.message && error.message.includes(columnNames[i])) {
-      columnName = columnNames[i].replace(/^./, (word) => word.toUpperCase());
+      columnName = columnNames[i].replace(/^./, (l) => l.toUpperCase());
       break;
     }
   }
